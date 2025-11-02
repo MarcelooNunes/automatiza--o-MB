@@ -3,58 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário</title>
+    <title>Formulário de Cadastro (Google Sheets)</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Cadastro de Cliente e Serviço</h1>
-        <form action="#" method="POST">
+        <h1>Cadastro de Cliente e Serviço (Integração Google Sheets)</h1>
+        
+        <!-- O ID do formulário é crucial para o JavaScript -->
+        <form id="google-sheet-form">
             
             <!-- Dados Pessoais -->
             <fieldset>
                 <legend>Dados Pessoais</legend>
                 
+                <!-- ATENÇÃO: Os atributos 'name' foram substituídos pelos Entry IDs fornecidos -->
                 <div class="form-group">
                     <label for="nome_cliente">Nome do Cliente:</label>
-                    <input type="text" id="nome_cliente" name="nome_cliente" required>
+                    <input type="text" id="nome_cliente" name="entry.1508477462" required>
                 </div>
 
                 <div class="form-group">
                     <label for="profissao">Profissão:</label>
-                    <input type="text" id="profissao" name="profissao" required>
+                    <input type="text" id="profissao" name="entry.1769587082" required>
                 </div>
 
                 <div class="form-group">
                     <label for="estado_civil">Estado Civil:</label>
-                    <select id="estado_civil" name="estado_civil" required>
+                    <select id="estado_civil" name="entry.576137551" required>
                         <option value="">Selecione</option>
-                        <option value="solteiro">Solteiro(a)</option>
-                        <option value="casado">Casado(a)</option>
-                        <option value="divorciado">Divorciado(a)</option>
-                        <option value="viuvo">Viúvo(a)</option>
-                        <option value="uniao_estavel">União Estável</option>
+                        <option value="Solteiro(a)">Solteiro(a)</option>
+                        <option value="Casado(a)">Casado(a)</option>
+                        <option value="Divorciado(a)">Divorciado(a)</option>
+                        <option value="Viúvo(a)">Viúvo(a)</option>
+                        <option value="União Estável">União Estável</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="nacionalidade">Nacionalidade:</label>
-                    <input type="text" id="nacionalidade" name="nacionalidade" value="Brasileira" required>
+                    <input type="text" id="nacionalidade" name="entry.1559950514" value="Brasileira" required>
                 </div>
 
                 <div class="form-group">
                     <label for="rg">RG:</label>
-                    <input type="text" id="rg" name="rg" maxlength="15" required>
+                    <input type="text" id="rg" name="entry.501155755" maxlength="15" required>
                 </div>
 
                 <div class="form-group">
                     <label for="orgao_emissor">Órgão Emissor:</label>
-                    <input type="text" id="orgao_emissor" name="orgao_emissor" required>
+                    <input type="text" id="orgao_emissor" name="entry.1959265103" required>
                 </div>
 
                 <div class="form-group">
                     <label for="cpf">CPF:</label>
-                    <input type="text" id="cpf" name="cpf" maxlength="14" required>
+                    <input type="text" id="cpf" name="entry.284561114" maxlength="14" required>
                 </div>
             </fieldset>
 
@@ -64,22 +67,22 @@
 
                 <div class="form-group">
                     <label for="cep">CEP:</label>
-                    <input type="text" id="cep" name="cep" maxlength="9" required>
+                    <input type="text" id="cep" name="entry.146264210" maxlength="9" required>
                 </div>
 
                 <div class="form-group">
                     <label for="residencia">Endereço (Rua/Avenida):</label>
-                    <input type="text" id="residencia" name="residencia" required>
+                    <input type="text" id="residencia" name="entry.1081335762" required>
                 </div>
 
                 <div class="form-group half-width">
                     <label for="numero">Número:</label>
-                    <input type="text" id="numero" name="numero" required>
+                    <input type="text" id="numero" name="entry.1325490080" required>
                 </div>
 
                 <div class="form-group half-width">
                     <label for="complemento">Complemento:</label>
-                    <input type="text" id="complemento" name="complemento">
+                    <input type="text" id="complemento" name="entry.1735025979">
                 </div>
             </fieldset>
 
@@ -89,17 +92,75 @@
 
                 <div class="form-group">
                     <label for="descricao_servicos">Descrição dos Serviços:</label>
-                    <textarea id="descricao_servicos" name="descricao_servicos" rows="5" required></textarea>
+                    <textarea id="descricao_servicos" name="entry.26710726" rows="5" required></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="honorarios_advocaticios">Honorários Advocatícios (R$):</label>
-                    <input type="number" id="honorarios_advocaticios" name="honorarios_advocaticios" step="0.01" min="0" required>
+                    <input type="number" id="honorarios_advocaticios" name="entry.1471527232" step="0.01" min="0" required>
                 </div>
             </fieldset>
 
-            <button type="submit">Enviar Cadastro</button>
+            <button type="submit" id="submit-button">Enviar Cadastro</button>
+            <p id="form-status" style="text-align: center; margin-top: 15px;"></p>
         </form>
     </div>
+
+    <script>
+        // ======================================================================================
+        // URL DE AÇÃO FINAL DO SEU GOOGLE FORM
+        // ======================================================================================
+        const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLScM7f8dvGnxdSoQULdUy3heM9zTVUUdKjeJI0t5P8pJdPm9fg/formResponse"; 
+        
+        const form = document.getElementById('google-sheet-form');
+        const statusMessage = document.getElementById('form-status');
+        const submitButton = document.getElementById('submit-button');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Desabilita o botão e mostra mensagem de carregamento
+            submitButton.disabled = true;
+            statusMessage.style.color = '#333';
+            statusMessage.innerHTML = 'Enviando dados... Por favor, aguarde.';
+
+            // Coleta os dados do formulário
+            const formData = new FormData(form);
+            const urlEncodedData = new URLSearchParams();
+
+            // Converte os dados para o formato URL-encoded que o Google Forms espera
+            for (const [key, value] of formData.entries()) {
+                // A chave (key) é o ENTRY_ID do Google Form
+                urlEncodedData.append(key, value);
+            }
+
+            // Envia a requisição POST para o Google Forms
+            fetch(GOOGLE_FORM_ACTION_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Necessário para evitar erros CORS, pois o Google Forms não retorna JSON
+                body: urlEncodedData
+            })
+            .then(() => {
+                // Como usamos 'no-cors', o 'then' é executado mesmo que o envio falhe, 
+                // mas é a maneira mais simples de submeter para o Google Forms.
+                // Assumimos sucesso se não houver erro de rede.
+                statusMessage.style.color = '#5cb85c';
+                statusMessage.innerHTML = 'Cadastro enviado com sucesso! Os dados estão na sua planilha.';
+                form.reset(); // Limpa o formulário
+            })
+            .catch(error => {
+                // Erro de rede ou outro erro de fetch
+                console.error('Erro ao enviar o formulário:', error);
+                statusMessage.style.color = '#d9534f';
+                statusMessage.innerHTML = 'Ocorreu um erro ao enviar. Verifique o console ou tente novamente.';
+            })
+            .finally(() => {
+                // Reabilita o botão após um pequeno atraso para feedback visual
+                setTimeout(() => {
+                    submitButton.disabled = false;
+                }, 2000);
+            });
+        });
+    </script>
 </body>
 </html>
