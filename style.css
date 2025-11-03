@@ -1,114 +1,252 @@
+/* ===========================
+   VARIÁVEIS DE COR
+=========================== */
+:root {
+  --primary-blue: #0077cc; /* Azul principal */
+  --dark-blue: #005fa3;    /* Azul escuro para hover */
+  --light-blue: #e6f2ff;   /* Azul claro para fundo/foco */
+  --text-color: #333;      /* Cor principal do texto */
+  --border-color: #ccc;    /* Cor da borda padrão */
+  --success-color: #28a745; /* Verde para sucesso */
+  --error-color: #dc3545;   /* Vermelho para erro */
+}
+
+/* ===========================
+   ESTILO GERAL
+=========================== */
 body {
-  font-family: 'Inter', Arial, sans-serif;
-  background-color: #f5f7fa;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #f4f7fb;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 40px 20px;
   margin: 0;
+  min-height: 100vh; /* Garante que o body ocupe a altura total */
 }
 
+/* ===========================
+   CONTAINER PRINCIPAL
+=========================== */
 .container {
-  background-color: #fff;
-  padding: 25px 30px;
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  border-radius: 12px; /* Borda mais suave */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Sombra mais proeminente */
   width: 100%;
-  max-width: 720px;
+  max-width: 950px; /* Aumentado para melhor visualização */
+  padding: 30px 40px 50px;
+  position: relative;
 }
 
-.logo-container {
+/* Faixa azul no topo - Mantida, mas com borda mais suave */
+.container::before {
+  content: "";
+  display: block;
+  height: 8px; /* Levemente mais grossa */
+  width: 100%;
+  background: var(--primary-blue);
+  border-radius: 12px 12px 0 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* ===========================
+   CABEÇALHO E LOGO
+=========================== */
+.header-area {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 }
 
 .logo {
-  height: 60px;
-  object-fit: contain;
+  max-width: 150px; /* Logo menor conforme solicitado */
+  height: auto;
+  margin-bottom: 15px;
 }
 
 h1 {
-  text-align: center;
-  color: #003366;
-  font-size: 1.5rem;
-  margin-bottom: 25px;
+  color: var(--dark-blue);
+  font-size: 24px;
+  margin: 0;
+  font-weight: 600;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
+/* ===========================
+   FIELDSETS
+=========================== */
 fieldset {
-  border: 1px solid #d1d9e6;
-  border-radius: 8px;
-  padding: 20px;
+  border: 1px solid #cfd8dc;
+  border-radius: 8px; /* Borda mais suave */
+  padding: 20px 25px 25px;
+  margin-bottom: 25px;
+  transition: box-shadow 0.3s ease;
+}
+
+fieldset:hover {
+  box-shadow: 0 0 10px rgba(0, 119, 204, 0.1); /* Sombra sutil ao passar o mouse */
 }
 
 legend {
-  color: #0056b3;
-  font-weight: 600;
-  font-size: 1rem;
+  color: var(--primary-blue);
+  font-weight: 700;
+  font-size: 18px;
   padding: 0 10px;
+  margin-left: -10px;
 }
 
+/* ===========================
+   GRUPOS DE CAMPOS
+=========================== */
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px; /* Espaçamento maior entre os campos */
+  margin-bottom: 15px;
 }
 
 .form-group {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 200px; /* Garante que os campos não fiquem muito estreitos */
 }
 
-label {
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 5px;
+/* Ajustes de largura para campos específicos */
+.form-group-cep { flex: 0 0 150px; }
+.form-group-numero { flex: 0 0 80px; }
+.form-group-uf { flex: 0 0 60px; }
+.form-group-rua { flex: 2; }
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-color);
 }
 
-input, select, textarea {
-  padding: 10px;
-  border: 1px solid #ccd6e0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px 12px; /* Padding maior */
+  border: 1px solid var(--border-color);
+  border-radius: 6px; /* Borda mais suave */
+  font-size: 15px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-input:focus, select:focus, textarea:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px var(--light-blue); /* Efeito de foco azul claro */
   outline: none;
 }
 
-button[type="submit"] {
-  background-color: #007bff;
-  color: #fff;
-  padding: 12px 18px;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+/* Placeholder */
+::placeholder {
+  color: #aaa;
+  font-size: 14px;
 }
 
-button[type="submit"]:hover {
-  background-color: #0056b3;
+/* ===========================
+   BOTÃO
+=========================== */
+button[type="submit"] {
+  background-color: var(--primary-blue);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 14px; /* Padding maior */
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background-color: var(--dark-blue);
+}
+
+button[type="submit"]:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button[type="submit"]:disabled {
+  background-color: #999;
+  cursor: not-allowed;
 }
 
 #form-status {
   text-align: center;
-  margin-top: 10px;
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 15px;
+  margin-top: 15px;
+  font-weight: 600;
+}
+.button-link {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+.button-link:hover {
+  background-color: #0056b3;
 }
 
-@media (max-width: 600px) {
+
+/* ===========================
+   RESPONSIVIDADE
+=========================== */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 20px 30px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
   .form-row {
-    flex-direction: column;
+    gap: 15px;
+  }
+
+  .form-group {
+    min-width: 100%; /* Campos ocupam a largura total em telas menores */
+  }
+
+  /* Remove ajustes de largura específicos em telas menores */
+  .form-group-cep,
+  .form-group-numero,
+  .form-group-uf,
+  .form-group-rua {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 20px 10px;
+  }
+
+  .logo {
+    max-width: 120px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  fieldset {
+    padding: 15px;
+  }
+
+  legend {
+    font-size: 16px;
   }
 }
